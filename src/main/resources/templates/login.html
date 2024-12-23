@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Calibri, Arial, sans-serif; /* Đặt font chữ Calibri */
+            height: 100vh;
+            background-color: #f4f4f4;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* Phần chứa ảnh */
+        .image-container {
+            flex: 1; /* Ảnh chiếm toàn bộ không gian còn lại */
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: left center; /* Hiển thị phần bên trái của ảnh */
+        }
+
+        /* Vạch ngăn cách */
+        .separator {
+            width: 15px; /* Chiều ngang của vạch */
+            background-color: #333e52; /* Màu sắc của vạch */
+            height: 100%;
+        }
+
+        /* Phần đăng nhập */
+        .login-overlay {
+            width: 40%; /* Login chiếm 40% chiều ngang */
+            background-color: #272d36;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-form {
+            width: 80%;
+            max-width: 400px; /* Giới hạn chiều rộng tối đa */
+            color: #fff;
+            font-size: 20px; /* Tăng cỡ chữ từ 16px lên 18px */
+            font-weight: bold; /* Chữ in đậm */
+        }
+
+        .login-form h2 {
+            margin-bottom: 60px;
+            font-size: 45px; /* Tăng cỡ chữ tiêu đề */
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column; /* Sắp xếp label và input theo chiều dọc */
+            align-items: flex-start;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-size: 25px; /* Tăng cỡ chữ label */
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px; /* Tăng kích thước ô nhập */
+            border: none;
+            border-radius: 5px;
+            background-color: #f4f4f4;
+            font-size: 18px; /* Đồng bộ cỡ chữ trong ô nhập */
+        }
+
+        .login-form button {
+            width: 100%;
+            padding: 10px; /* Tăng kích thước nút bấm */
+            margin-top: 30px;
+            background-color: #3b5998;
+            color: #fff;
+            border: 2px solid #fff; /* Thêm viền trắng dày 2px */
+            border-radius: 5px; /* Bo tròn viền */
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 22px; /* Tăng cỡ chữ nút bấm */
+        }
+
+        .login-form button:hover {
+            background-color: #4a69ad;
+        }
+
+        /* Responsive chỉnh kích thước */
+        @media (max-width: 768px) {
+            .login-overlay {
+                width: 50%; /* Chiếm 50% màn hình khi màn hình nhỏ hơn */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-overlay {
+                width: 70%; /* Chiếm nhiều hơn trên màn hình rất nhỏ */
+            }
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Phần chứa ảnh -->
+    <div class="image-container">
+        <img src="https://i.imgur.com/0lvPWEg.jpg" alt="Login Illustration" />
+    </div>
+
+    <!-- Vạch ngăn cách -->
+    <div class="separator"></div>
+
+    <!-- Phần đăng nhập -->
+    <div class="login-overlay">
+        <div class="login-form">
+            <h2>Sign In</h2>
+            <form th:action="@{/auth/login}" method="post">
+                <div class="form-group">
+                    <label for="username">* Username</label>
+                    <input
+                            type="text"
+                            id="username" name="username"
+                            placeholder="Enter your username"
+                            required
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="password">* Password</label>
+                    <input
+                            type="password"
+                            id="password" name="password"
+                            placeholder="Enter your password"
+                            required
+                    />
+                </div>
+
+                <button type="submit">Sign In</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

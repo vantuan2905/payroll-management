@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css" >
+    <style>
+        .weekend {
+            background-color: rgba(131, 125, 125, 0.15); /* Bôi nền đen */
+           
+        }
+        .scrollable-table {
+            max-height: 490px; /* Chiều cao cố định */
+            overflow-y: auto;  /* Cuộn theo chiều dọc */
+            border: 1px solid #ccc; /* Đường viền cho đẹp */
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd; /* Đường viền giữa các ô */
+        }
+
+        th {
+            background-color: #f4f4f4;
+            position: sticky;
+            top: 0; /* Cố định tiêu đề khi cuộn */
+            z-index: 1;
+        }
+        .text-red {
+            color: red;
+        }
+        .btn-link {
+            background: none;
+            color: blue;
+            border: none;
+            padding: 0;
+            font: inherit;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .btn-link:hover {
+            color: darkblue;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<nav>
+    <div th:replace="fragments/menu :: navbar"></div>
+</nav>
+<p></p>
+<div class="container mt-5">
+    <div class="filter" style="padding-left:30px">
+        <form th:action="@{/chamCong/loc}" action="get">
+            <select name="thang" >
+                <option value="1" th:selected="${thang == 1}">Tháng 1</option>
+                <option value="2" th:selected="${thang == 2}">Tháng 2</option>
+                <option value="3" th:selected="${thang == 3}">Tháng 3</option>
+                <option value="4" th:selected="${thang == 4}">Tháng 4</option>
+                <option value="5" th:selected="${thang == 5}">Tháng 5</option>
+                <option value="6" th:selected="${thang == 6}">Tháng 6</option>
+                <option value="7" th:selected="${thang == 7}">Tháng 7</option>
+                <option value="8" th:selected="${thang == 8}">Tháng 8</option>
+                <option value="9" th:selected="${thang == 9}">Tháng 9</option>
+                <option value="10" th:selected="${thang == 10}">Tháng 10</option>
+                <option value="11" th:selected="${thang == 11}">Tháng 11</option>
+                <option value="12" th:selected="${thang == 12}">Tháng 12</option>
+            </select>
+            <select name="nam">
+                <option>2024</option>
+                <option>2023</option>
+            </select>
+            <input type="submit" value="Lọc" style="background: dodgerblue;width:50px">
+        </form>
+    </div>
+    <div class="content" style="padding:30px">
+        <div class="table-container scrollable-table">
+            <table class="attendance-table" id="chamCongTable">
+                <thead>
+                <tr>
+                    <th>Ngày</th>
+                    <th>Checkin</th>
+                    <th>Checkout</th>
+                    <th>Thời gian làm việc</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="chamCong : ${danhSachChamCong}">
+                    <td><button class="btn-link"  type="button" th:text="${chamCong.workDate}">
+                    </button></td>
+                    <td th:classappend="${chamCong.isLate} ? 'text-red' : ''" th:text="${chamCong.checkIn}"></td>
+                    <td th:classappend="${chamCong.isEarly} ? 'text-red' : ''" th:text="${chamCong.checkOut}"></td>
+                    <td th:text="${chamCong.workingHours}"></td>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="summary-and-notes">
+            <div class="summary">
+                <h2>Thống kê</h2>
+                <ul>
+                    <li><span class="status normal">Đã chấm công</span> 10</li>
+                    <li><span class="status early-late">Xin về sớm/Đi muộn</span> 3</li>
+                    <li><span class="status leave">Nghỉ phép</span> 1</li>
+                    <li><span class="status unpaid-leave">Nghỉ không lương</span> 2</li>
+                    <li><span class="status ot">Đăng ký OT</span> 3</li>
+                </ul>
+            </div>
+            <div class="note">
+                <h2>Chú ý</h2>
+                <ul>
+                    <li>Ca làm bắt đầu lúc <b><span id="checkIn" th:text="${checkIn}"></span></b></li>
+                    <li>Tan làm lúc <b><span id="checkOut" th:text="${checkOut}"></span></b></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get the active item's value from the hidden input
+        const activeItem = document.querySelector('input[name="active"]').value;
+        console.log(activeItem)
+        // Find the corresponding nav-bar item and add the 'active' class
+        const activeNavItem = document.getElementById(activeItem);
+        if (activeNavItem) {
+            activeNavItem.classList.add("active");
+        }
+    });
+    // Lấy tất cả các hàng trong bảng
+    const rows = document.querySelectorAll('#chamCongTable tbody tr');
+
+    rows.forEach(row => {
+        // Lấy cột "Ngày" trong hàng
+        const dateCell = row.cells[0];
+        const dateText = dateCell.textContent.trim();
+
+        // Chuyển đổi chuỗi ngày thành đối tượng Date
+        const date = new Date(dateText);
+        console.log(date)
+        const dayOfWeek = date.getDay(); // 0 = Chủ Nhật, 6 = Thứ Bảy
+
+        // Nếu là thứ 7 (6) hoặc chủ nhật (0), thêm lớp CSS
+        if (dayOfWeek === 0 || dayOfWeek === 6) {
+            row.classList.add('weekend');
+        }
+    });
+
+    const checkInValue = document.getElementById('checkIn').innerText;
+    const checkOutValue = document.getElementById('checkOut').innerText;
+
+</script>
+
+</html>

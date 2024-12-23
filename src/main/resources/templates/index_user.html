@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Profile</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css" >
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<nav>
+  <div th:replace="fragments/menu :: navbar"></div>
+</nav>
+<p></p>
+<div class="container mt-5">
+  <div class="card p-3 shadow-sm">
+    <div class="row g-3">
+      <div class="col-md-3 text-center">
+        <img src="/images/img.png" alt="Profile Picture" class="img-fluid rounded-circle" id="profile-picture">
+        <button class="btn btn-outline-primary btn-sm mt-2">Đổi ảnh đại diện</button>
+      </div>
+      <div class="col-md-9">
+        <div class="card-body">
+          <h5 class="card-title">Hồ sơ nhân viên</h5>
+          <div>
+            <p><strong>Họ tên:</strong> <span th:text="${user.hoTen}"></span></p>
+            <p><strong>Ngày sinh:</strong> <span th:text="${user.ngaySinh}"></span></p>
+            <p><strong>Giới tính:</strong> <span th:text="${user.gioiTinh}"></span></p>
+            <p><strong>Phòng ban:</strong> <span th:text="${user.maPB}"></span></p>
+            <p><strong>Vị trí:</strong> <span th:text="${user.maCV}"></span></p>
+            <p><strong>Mã nhân viên:</strong> <span th:text="${user.maNV}"></span></p>
+            <p><strong>Điện thoại:</strong> <span th:text="${user.sdt}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+            <p><strong>Quê quán:</strong> <span th:text="${user.queQuan}"></span></p>
+            <p><strong>Nơi ở hiện tại:</strong> <span th:text="${user.noiO}"></span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-end mt-3">
+      <button class="btn btn-secondary">Đăng xuất</button>
+      <button class="btn btn-primary">Cập nhật thông tin</button>
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get the active item's value from the hidden input
+    const activeItem = document.querySelector('input[name="active"]').value;
+    console.log(activeItem)
+    // Find the corresponding nav-bar item and add the 'active' class
+    const activeNavItem = document.getElementById(activeItem);
+    if (activeNavItem) {
+      activeNavItem.classList.add("active");
+    }
+  });
+
+</script>
+</body>
+</html>
