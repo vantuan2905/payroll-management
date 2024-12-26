@@ -1,6 +1,8 @@
 package org.example.payroll_management.controller;
 
+import org.example.payroll_management.dao.ChiTietChamCongRepository;
 import org.example.payroll_management.model.ChamCong;
+import org.example.payroll_management.model.ChiTietChamCong;
 import org.example.payroll_management.service.ChamCongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
@@ -20,6 +22,8 @@ public class ChamCongController {
     private final GlobalVariables globalVariables;
     @Autowired
     ChamCongService chamCongService;
+    @Autowired
+    ChiTietChamCongRepository chiTietChamCongRepository;
     public ChamCongController(GlobalVariables globalVariables) {
         this.globalVariables = globalVariables;
     }
@@ -54,6 +58,7 @@ public class ChamCongController {
         model.addAttribute("checkOut",globalVariables.getCheckOut());
         return "chamCong_user";
     }
+
 
     public void thongKe(Model model,List<ChamCong> chamCongThang){
 

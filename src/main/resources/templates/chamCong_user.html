@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employee Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="/css/styles.css" >
     <style>
         .weekend {
@@ -45,6 +47,49 @@
             color: darkblue;
             text-decoration: none;
         }
+        .label{
+            display:block;
+            float:left;
+            width:200px;
+        }
+        .positioned-button {
+            position: absolute; /* Use absolute or fixed for specific positioning */
+            top: 100px;
+            left: 500px;
+        }
+        .popup {
+            position: fixed;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            border-radius: 8px;
+            width: 450px;
+            text-align: left;
+        }
+
+        .popup-content button {
+            margin: 5px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .popup-content button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Overlay */
+        body.popup-active {
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
     </style>
 </head>
 <body>
@@ -77,6 +122,12 @@
             <input type="submit" value="Lọc" style="background: dodgerblue;width:50px">
         </form>
     </div>
+    <button id="xinChamCong"   type="button" value="" style="top:100px;left:1200px" class="btn btn-info positioned-button" >
+        Yêu cầu chấm công
+    </button>
+    <button id="xinOvertime"   type="button" value="" style="top:100px;left:1080px" class="btn btn-warning positioned-button" >
+        Yêu cầu OT
+    </button>
     <div class="content" style="padding:30px">
         <div class="table-container scrollable-table">
             <table class="attendance-table" id="chamCongTable">
@@ -91,8 +142,10 @@
                 </thead>
                 <tbody>
                 <tr th:each="chamCong : ${danhSachChamCong}">
-                    <td><button class="btn-link"  type="button" th:text="${chamCong.workDate}">
-                    </button></td>
+                    <td>
+                            <button type="button" th:text="${chamCong.workDate}" class="btn btn-primary fetch-data-btn" data-bs-toggle="modal" data-bs-target="#myModal">
+                            </button>
+                    </td>
                     <td th:classappend="${chamCong.isLate} ? 'text-red' : ''" th:text="${chamCong.checkIn}"></td>
                     <td th:classappend="${chamCong.isEarly} ? 'text-red' : ''" th:text="${chamCong.checkOut}"></td>
                     <td th:text="${chamCong.workingHours}"></td>
@@ -122,9 +175,155 @@
         </div>
     </div>
 </div>
-</body>
+
+
+<!-- The Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Popup Title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- Modal Body -->
+            <div class="modal-body">
+                This is the content inside the popup. You can put text, images, or other HTML elements here.
+            </div>
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Second Popup -->
+<div id="chamCongg" class="popup" style="display: none;">
+    <div class="popup-content">
+        <h3>Yêu cầu chấm công</h3>
+
+            <label for="selectAction">Yêu cầu checkin/checkout:</label>
+            <select id="selectAction" name="selectAction">
+                <option value="checkin">Check-in</option>
+                <option value="checkout">Check-out</option>
+            </select>
+            <br><br>
+            <label for="liDo">Lí do:</label>
+            <textarea id="liDo" name="liDo" placeholder="Lí do châm công..." rows="4" cols="50"></textarea>
+            <br><br>
+            <button id="closeChamCong" type="button">Close</button>
+            <button id="saveChamCong" type="submit">Save</button>
+    </div>
+</div>
+
+<!-- overtime Popup -->
+<div id="overtime" class="popup" style="display: none;">
+    <div class="popup-content">
+        <h3>Yêu cầu Overtime</h3>
+        <p>This is the content of the second popup.</p>
+        <button id="closeOvertime">Close</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+    $(document).ready(function () {
+        // Open the second modal when the button is clicked
+        $('#xinChamCong').on('click', function () {
+            console.log(1)
+            const chamCong = document.getElementById("chamCongg");
+            chamCong.style.display = "block";
+            console.log(chamCong.style.display)
+        });
+        const closeChamCongForm = document.getElementById("closeChamCong");
+        closeChamCongForm.addEventListener("click", function () {
+            const chamCong = document.getElementById("chamCongg");
+            chamCong.style.display = "none";
+        });
+        // Add an event listener to the "Save" button
+        document.getElementById('saveChamCong').addEventListener('click', function () {
+            // Get the values of the select and textarea elements
+            const actionValue = document.getElementById('selectAction').value;
+            const textareaValue = document.getElementById('liDo').value;
+
+            // Log the values to the console
+            console.log('Selected Action:', actionValue);
+            console.log('Textarea Content:', textareaValue);
+
+        });
+
+        // Open the second modal when the button is clicked
+        $('#xinOvertime').on('click', function () {
+            console.log(1)
+            const overtime = document.getElementById("overtime");
+            overtime.style.display = "block";
+            console.log(overtime.style.display)
+        });
+        const closeOvertimeForm = document.getElementById("closeOvertime");
+        closeOvertimeForm.addEventListener("click", function () {
+            const overtime = document.getElementById("overtime");
+            overtime.style.display = "none";
+        });
+        // Delegate click event to all buttons with class 'fetch-data-btn'
+        $(document).on('click', '.fetch-data-btn', function () {
+            // Get the text of the clicked button
+            const workDate = $(this).text().trim();
+            console.log('Button value:', workDate);
+            // Make an API call using this value
+            $('#myModal .modal-title').text(`Chi tiết chấm công ngày ${workDate}`);
+            $.ajax({
+                url: '/chiTiet/', // Replace with your Spring API endpoint
+                method: 'GET',
+                data: { ngayCong:  workDate}, // Send the workDate as a query parameter
+                success: function (data) {
+                    console.log('API response:', data);
+
+                    // Create HTML for check-ins and check-outs, displaying one or both as needed
+                    let content = '<div class="record-container">';
+                    if (data.length > 0) {
+                        data.forEach(item => {
+                            content += `<div class="record">`;
+
+                            if (item.checkIn) {
+                                content += `
+                                    <div class="record-detail" >
+                                        <span class="label" style="display:block;float:left;width:80px">Check-In:</span>
+                                        <span class="value checkin" style="color:green">${item.checkIn}</span>
+                                    </div>
+                                `;
+                            } else if (item.checkOut) {
+                                content += `
+                                    <div class="record-detail">
+                                        <span class="label" style="display:block;float:left;width:80px">Check-Out:</span>
+                                        <span class="value checkout" style="color:red">${item.checkOut}</span>
+                                    </div>
+                                `;
+                            }
+
+                            // Close the record div
+                            content += `</div>`;
+                        });
+                    } else {
+                        content += `<p class="text-muted">No valid check-in or check-out records available.</p>`;
+                    }
+
+                    content += '</div>';
+
+                    // Insert the content into the modal body
+                    $('#myModal .modal-body').html(content);
+                },
+                error: function (error) {
+                    console.error('Error fetching data:', error);
+                    $('#myModal .modal-body').html(`
+                        <p class="text-danger">Failed to fetch data for ${workDate}.</p>
+                    `);
+                }
+            });
+        });
+    });
     document.addEventListener("DOMContentLoaded", function () {
         // Get the active item's value from the hidden input
         const activeItem = document.querySelector('input[name="active"]').value;
@@ -154,9 +353,13 @@
         }
     });
 
+
     const checkInValue = document.getElementById('checkIn').innerText;
     const checkOutValue = document.getElementById('checkOut').innerText;
 
 </script>
+
+
+</body>
 
 </html>

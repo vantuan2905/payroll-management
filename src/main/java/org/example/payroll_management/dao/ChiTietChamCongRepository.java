@@ -3,6 +3,8 @@ import org.example.payroll_management.model.ChiTietChamCong;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -14,4 +16,6 @@ public interface ChiTietChamCongRepository extends JpaRepository<ChiTietChamCong
             "        ELSE check_Out\n" +
             "    END ASC;")
     List<ChiTietChamCong> layChiTietChamCong(String employeeId);
+
+    List<ChiTietChamCong> findByDate(LocalDate date);
 }
