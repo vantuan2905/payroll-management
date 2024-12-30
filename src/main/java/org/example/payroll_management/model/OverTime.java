@@ -8,9 +8,16 @@ import lombok.Data;
 @Data
 public class OverTime {
     @Id
-    @Column(name = "_date")
-    private String _date;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+   public Long id;
+
+    @Column(name = "loai")
+    public String loai;
 
     @Column(name = "moTa")
-    private Long moTa;
+    public String moTa;
+
+    @Column(name = "heSo")
+    public double heSo;
 }

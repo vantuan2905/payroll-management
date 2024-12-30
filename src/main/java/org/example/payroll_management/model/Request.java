@@ -3,6 +3,9 @@ package org.example.payroll_management.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 @Entity
 @Table(name = "Request")
 @Data
@@ -26,4 +29,7 @@ public class Request {
 
     @Column(name = "nguoiDuyet")
     private String nguoiDuyet;
+
+    @Column(name = "ngayTao")
+    private LocalDate ngayTao;
 }

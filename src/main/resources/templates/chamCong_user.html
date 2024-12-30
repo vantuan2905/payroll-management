@@ -90,6 +90,68 @@
             background-color: rgba(0, 0, 0, 0.5);
             overflow: hidden;
         }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .form-group select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .form-group textarea {
+            resize: none;
+            height: 130px;
+        }
+
+        .form-group .required {
+            color: red;
+        }
+
+        /* Di chuyển nút hành động ra ngoài dưới góc phải */
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px; /* Thêm khoảng cách phía trên */
+        }
+
+        .button-group button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .button-group .cancel-btn {
+            background: #ccc;
+            color: #333;
+        }
+
+        .button-group .submit-btn {
+            background: #007bff;
+            color: #fff;
+        }
+
     </style>
 </head>
 <body>
@@ -98,6 +160,7 @@
     <div th:replace="fragments/menu :: navbar"></div>
 </nav>
 <p></p>
+<input type="hidden" id="manv" th:value="${manv}">
 <div class="container mt-5">
     <div class="filter" style="padding-left:30px">
         <form th:action="@{/chamCong/loc}" action="get">
@@ -122,12 +185,14 @@
             <input type="submit" value="Lọc" style="background: dodgerblue;width:50px">
         </form>
     </div>
-    <button id="xinChamCong"   type="button" value="" style="top:100px;left:1200px" class="btn btn-info positioned-button" >
+    <button id="xinChamCong"   type="button" value="" style="top:90px;left:1200px" class="btn btn-info positioned-button" >
         Yêu cầu chấm công
     </button>
-    <button id="xinOvertime"   type="button" value="" style="top:100px;left:1080px" class="btn btn-warning positioned-button" >
+    <button id="xinOvertime"   type="button" value="" style="top:90px;left:1080px" class="btn btn-warning positioned-button" >
         Yêu cầu OT
     </button>
+    <button type="button" class="btn btn-danger positioned-button" style="top:130px;left:1200px;">Báo cáo chấm công</button>
+    <button type="button"  id="xinNghi" class="btn btn-secondary positioned-button" style="top:130px;left:1080px;width:105px">Xin nghỉ</button>
     <div class="content" style="padding:30px">
         <div class="table-container scrollable-table">
             <table class="attendance-table" id="chamCongTable">
@@ -158,11 +223,11 @@
             <div class="summary">
                 <h2>Thống kê</h2>
                 <ul>
-                    <li><span class="status normal">Đã chấm công</span> 10</li>
-                    <li><span class="status early-late">Xin về sớm/Đi muộn</span> 3</li>
-                    <li><span class="status leave">Nghỉ phép</span> 1</li>
-                    <li><span class="status unpaid-leave">Nghỉ không lương</span> 2</li>
-                    <li><span class="status ot">Đăng ký OT</span> 3</li>
+                    <li><span class="status normal">Nghỉ không phép</span> <span  th:text="${nghiKhongPhep}"></span></li>
+                    <li><span class="status early-late">Xin về sớm/Đi muộn</span> <span  th:text="${diSomVeMuon}"></span></li>
+                    <li><span class="status leave">Nghỉ phép</span> <span  th:text="${nghiPhep}"></span></li>
+                    <li><span class="status unpaid-leave">Nghỉ không lương</span> <span  th:text="${nghiKhongLuong}"></span></li>
+                    <li><span class="status ot">Đăng ký OT</span> <span  th:text="${ot}"></span></li>
                 </ul>
             </div>
             <div class="note">
@@ -219,13 +284,64 @@
 </div>
 
 <!-- overtime Popup -->
-<div id="overtime" class="popup" style="display: none;">
+<div id="overtime" class="popup" style="display: none;top:40%">
     <div class="popup-content">
         <h3>Yêu cầu Overtime</h3>
-        <p>This is the content of the second popup.</p>
-        <button id="closeOvertime">Close</button>
+        <!-- Các phần nhập liệu -->
+        <div class="form-group">
+            <label>Hình thức OT <span class="required">*</span></label>
+            <select id="loaiOT">
+                <option value="">Chọn hình thức</option>
+                <option value="ngayThuong">ngày thường</option>
+                <option value="ngayNghi">ngày nghỉ</option>
+                <option value="nghiLe">ngày lễ</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Ngày <span class="required">*</span></label>
+            <input id="ngayOT" type="date" />
+        </div>
+        <!-- Lý do -->
+        <div class="form-group">
+            <label>Lý do</label>
+            <textarea id="liDoOT" placeholder="Nhập lý do"></textarea>
+        </div>
+        <button id="closeOvertime" class="cancel-btn">Close</button>
+        <button id="saveOT" type="submit">Save</button>
     </div>
 </div>
+
+
+<!-- Nghỉ Popup -->
+<div id="nghi" class="popup" style="display: none;top:45%">
+    <div class="popup-content">
+        <h3>Yêu cầu nghỉ phép</h3>
+        <!-- Các phần nhập liệu -->
+        <div class="form-group">
+            <label>Hình thức nghỉ <span class="required">*</span></label>
+            <select id="loaiNghiPhep">
+                <option value="nghiPhepThuong">Nghỉ phép thường</option>
+                <option value="nghiPhepNam">Nghỉ phép năm</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Từ ngày <span class="required">*</span></label>
+            <input id="start" type="date" />
+        </div>
+        <div class="form-group">
+            <label>Đến ngày <span class="required">*</span></label>
+            <input id="end" type="date" />
+        </div>
+        <!-- Lý do -->
+        <div class="form-group">
+            <label>Lý do</label>
+            <textarea id="liDoNghi" placeholder="Nhập lý do"></textarea>
+        </div>
+        <button id="closeNghi" class="cancel-btn">Close</button>
+        <button id="saveNghi" type="submit">Save</button>
+    </div>
+</div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -243,16 +359,127 @@
             const chamCong = document.getElementById("chamCongg");
             chamCong.style.display = "none";
         });
-        // Add an event listener to the "Save" button
-        document.getElementById('saveChamCong').addEventListener('click', function () {
+        // When the "Save" button is clicked
+        $('#saveChamCong').on('click', function(event) {
+            event.preventDefault();  // Prevent the form from submitting normally
             // Get the values of the select and textarea elements
             const actionValue = document.getElementById('selectAction').value;
             const textareaValue = document.getElementById('liDo').value;
-
+            
             // Log the values to the console
             console.log('Selected Action:', actionValue);
             console.log('Textarea Content:', textareaValue);
+            const data = {
+                manv:manv,
+                ghiChu: textareaValue
+            };
+            // Send the AJAX request
+            $.ajax({
+                url: '/request/chamCong',  // Replace with your API URL
+                type: 'GET',
+                contentType: 'application/json',
+                data: {
+                    manv:manv,
+                    ghiChu: textareaValue
+                },  // Convert the data to JSON format
+                success: function(response) {
+                    // Handle success response
+                    console.log("Data saved successfully: ", response);
+                    const chamCong = document.getElementById("chamCongg");
+                    chamCong.style.display = "none";
+                    document.getElementById("liDo").value = "";
+                    alert("Gửi yêu cầu chấm công thành công");
+                },
+                error: function(xhr, status, error) {
+                    // Handle error response
+                    console.error("Error: ", error);
+                    alert("An error occurred while saving the data.");
+                }
+            });
+        });
+        const manv=document.getElementById('manv').value
+        // When the "Save" button is clicked
+        $('#saveOT').on('click', function(event) {
+            event.preventDefault();  // Prevent the form from submitting normally
+            // Get values from the input fields
+            const loai = document.getElementById('loaiOT').value;
+            const ngay = document.getElementById('ngayOT').value;
+            const liDoOT = document.getElementById('liDoOT').value;
 
+            // Log the values
+            console.log('Hình thức OT:', loai);
+            console.log('Ngày:', ngay);
+            console.log('Lý do OT:', liDoOT);
+
+            const ghiChu = `${ngay}\n${loai}\n${liDoOT}`;
+            const data = {
+                manv:manv,
+                ghiChu: ghiChu
+            };
+            console.log(ghiChu)
+            // Send the AJAX request
+            $.ajax({
+                url: '/request/overtime',  // Replace with your API URL
+                type: 'GET',
+                contentType: 'application/json',
+                data: {
+                    manv:manv,
+                    ghiChu: ghiChu
+                },  // Convert the data to JSON format
+                success: function(response) {
+                    // Handle success response
+                    console.log("Data saved successfully: ", response);
+                    const ot = document.getElementById("overtime");
+                    ot.style.display = "none";
+                    document.getElementById("liDoOT").value = "";
+                    alert("Gửi yêu cầu OT thành công");
+                },
+                error: function(xhr, status, error) {
+                    // Handle error response
+                    console.error("Error: ", error);
+                    alert("An error occurred while saving the data.");
+                }
+            });
+        });
+
+        $('#saveNghi').on('click', function(event) {
+            event.preventDefault();  // Prevent the form from submitting normally
+            // Get values from the input fields
+            const loai = document.getElementById('loaiNghiPhep').value;
+            const start = document.getElementById('start').value;
+            const end = document.getElementById('end').value;
+            const liDoOT = document.getElementById('liDoNghi').value;
+
+
+            const ghiChu = `${loai}\n${start}\n${end}\n${liDoOT}`;
+            const data = {
+                manv:manv,
+                ghiChu: ghiChu
+            };
+            console.log(ghiChu)
+            // Send the AJAX request
+            $.ajax({
+                url: '/request/nghi',  // Replace with your API URL
+                type: 'GET',
+                contentType: 'application/json',
+                data: {
+                    manv:manv,
+                    ghiChu: ghiChu
+                },  // Convert the data to JSON format
+                success: function(response) {
+                    // Handle success response
+                    console.log("Data saved successfully: ", response);
+                    const nghi = document.getElementById("nghi");
+                    nghi.style.display = "none";
+                    document.getElementById("liDoNghi").value = "";
+                    alert("Gửi yêu cầu nghỉ thành công");
+                },
+                error: function(xhr, status, error) {
+                    // Handle error response
+                    console.error("Error: ", error);
+                    alert("An error occurred while saving the data.");
+                }
+            });
         });
 
         // Open the second modal when the button is clicked
@@ -266,6 +493,19 @@
         closeOvertimeForm.addEventListener("click", function () {
             const overtime = document.getElementById("overtime");
             overtime.style.display = "none";
+        });
+
+        // Open the second modal when the button is clicked
+        $('#xinNghi').on('click', function () {
+            console.log(1)
+            const  nghi = document.getElementById("nghi");
+            nghi.style.display = "block";
+            console.log(nghi.style.display)
+        });
+        const closeNghiForm = document.getElementById("closeNghi");
+        closeNghiForm.addEventListener("click", function () {
+            const nghi = document.getElementById("nghi");
+            nghi.style.display = "none";
         });
         // Delegate click event to all buttons with class 'fetch-data-btn'
         $(document).on('click', '.fetch-data-btn', function () {

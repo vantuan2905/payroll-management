@@ -86,6 +86,9 @@ public class CheckOutController {
             if (!currentTime.isAfter(previousTime)) {
                 continue;
             }
+            if(previousTime.isAfter(lunchStart) && currentTime.isBefore(lunchEnd)){
+                continue;
+            }
             System.out.println(currentTime+" "+cutoffTime);
             System.out.println(currentTime.isAfter(cutoffTime));
 
@@ -95,9 +98,20 @@ public class CheckOutController {
                     // If previous time is before or at 17:30, move it to 17:30
                     System.out.println(previousTime+" "+cutoffTime);
                     Duration duration = Duration.between(previousTime, cutoffTime);
+                    // If time spans across lunch break, exclude it
+                    if (!cutoffTime.isBefore(lunchStart) && !previousTime.isAfter(lunchEnd)) {
+                        // Calculate overlapping time with lunch
+                        LocalTime adjustedStart = previousTime.isBefore(lunchStart) ? lunchStart : previousTime;
+                        LocalTime adjustedEnd = cutoffTime.isAfter(lunchEnd) ? lunchEnd : cutoffTime;
+                        Duration lunchOverlap = Duration.between(adjustedStart, adjustedEnd);
+                        // Subtract lunch overlap from the total duration
+                        duration = duration.minus(lunchOverlap);
+                    }
                     workHour+=duration.toMinutes()/60.0f;
                     System.out.println(duration.toHours()+"-"+duration.toMinutes()+" "+duration.toSeconds());
+
                     duration = Duration.between(cutoffTime, currentTime);
+
                     overTimeHour+=duration.toMinutes()/60.0f;
                     System.out.println(duration.toHours()+" "+duration.toMinutes()+" "+duration.toSeconds());
                     continue;
@@ -112,6 +126,7 @@ public class CheckOutController {
             if (previousTime.isBefore(startTime)) {
                 previousTime = startTime;
             }
+
             // Calculate the duration and add to the list
             Duration duration = Duration.between(previousTime, currentTime);
             // If time spans across lunch break, exclude it
@@ -131,6 +146,7 @@ public class CheckOutController {
         System.out.println(chamCong.getId());
         chamCong.setWorkingHours(workHour);
         chamCong.setOverTimeHour(overTimeHour);
-        return 1.0f;
+        chamCongService.luuChamCong(chamCong);
+        return workHour;
     }
 }

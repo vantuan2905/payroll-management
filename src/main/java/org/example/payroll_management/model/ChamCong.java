@@ -6,6 +6,7 @@ import lombok.Data;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Table(name = "ChamCong")
@@ -28,25 +29,29 @@ public class ChamCong {
     @Column(name = "checkOut")
     private LocalTime checkOut;
 
-    @Column(name = "workingHour")
+    @Column(name = "workingHour", columnDefinition = "DOUBLE PRECISION  DEFAULT 0")
     private Double workingHours;
 
-    @Column(name = "isLate")
+    @Column(name = "isLate", columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean isLate;
 
-    @Column(name = "isEarly")
+    @Column(name = "isEarly", columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean isEarly;
 
-    @Column(name = "isOverTime")
+    @Column(name = "isOverTime", columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean isOverTime;
 
-    @Column(name = "overTimeHour")
+    @Column(name = "overTimeHour", columnDefinition = "FLOAT DEFAULT 0")
     private Float overTimeHour;
 
-    @Column(name = "holiday")
+    @Column(name = "holiday", columnDefinition = "INTEGER DEFAULT 0")
     private Integer holiday;
 
-    @Column(name = "isPaidLeaveDay")
-    private String isPaidLeaveDay;
+    @Column(name = "isPaidLeaveDay", columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean isPaidLeaveDay;
 
+    @Column(name = "isApprovedLeaveDay", columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean isApprovedLeaveDay;
+    @Transient
+    private OverTime overTime;
 }

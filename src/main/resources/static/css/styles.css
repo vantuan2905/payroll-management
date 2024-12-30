@@ -163,7 +163,7 @@ a{
 }
 
 .status.late { background-color: orange; }
-.status.normal { background-color: green; }
+.status.normal { background-color: #B0C4DE; }
 .status.early-late { background-color: #f0a202; }
 .status.leave { background-color: purple; }
 .status.unpaid-leave { background-color: red; }

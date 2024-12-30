@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css" >
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .status-approved {
+            background-color: #d4edda;
+            color: #155724;
+            font-weight: bold;
+        }
+        .status-rejected {
+            background-color: #f8d7da;
+            color: #721c24;
+            font-weight: bold;
+        }
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<nav>
+    <div th:replace="fragments/menu :: navbar"></div>
+</nav>
+<p></p>
+<div class="content" style="padding:30px">
+    <div class="table-container scrollable-table">
+        <table>
+            <thead>
+            <tr>
+                <th>Ngày tạo</th>
+                <th>Loại yêu cầu</th>
+                <th>Ghi chú</th>
+                <th>Trạng thái</th>
+            </tr>
+            </thead>
+            <tbody >
+            <tr  th:each="request : ${requests}">
+                <td th:text="${request.getNgayTao()}">122</td>
+                <td th:text="${request.getLoai()}">Nghỉ không lương</td>
+                <td style="white-space: pre-wrap;text-align: left" th:text="${request.getGhiChu()}"></td>
+                <td
+                    th:switch="${request.trangThai}">
+                    <span th:case="'Đã duyệt'" class="status-approved">Đã duyệt</span>
+                    <span th:case="'Từ chối'" class="status-rejected">Từ chối</span>
+                    <span th:case="*" class="status-pending">Chưa xử lý222</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get the active item's value from the hidden input
+        const activeItem = document.querySelector('input[name="active"]').value;
+        console.log(activeItem)
+        // Find the corresponding nav-bar item and add the 'active' class
+        const activeNavItem = document.getElementById(activeItem);
+        if (activeNavItem) {
+            activeNavItem.classList.add("active");
+        }
+    });
+
+</script>
+</body>
+</html>

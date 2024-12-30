@@ -6,11 +6,14 @@ import lombok.Data;
 @Entity
 @Table(name = "NghiLe")
 @Data
-public class NghỉLe {
+public class NghiLe {
     @Id
     @Column(name = "_date")
     private String _date;
 
+    @Column(name = "loai")
+    private Boolean loai;
+
     @Column(name = "moTa")
-    private Long moTa;
+    private String moTa;
 }
