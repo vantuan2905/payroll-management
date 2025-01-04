@@ -30,4 +30,8 @@ public class ChamCongService {
         System.out.println(workDate+"   "+employeeId);
         return chamCongRepository.findByWorkDateAndEmployeeId(workDate,employeeId);
     }
+
+    public int countPaidLeaveDay(String employeeId,int nam){
+        return chamCongRepository.countPaidLeaveDay(employeeId,nam);
+    }
 }

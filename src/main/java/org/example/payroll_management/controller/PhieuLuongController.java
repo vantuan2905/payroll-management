@@ -59,6 +59,12 @@ public class PhieuLuongController {
         NhanVien nhanVien=nhanVienService.layNhanVienTheoId(user);
 //        System.out.println(nhanVien.maPB+" "+nhanVien.maCV+" "+globalVariables.getPhatDiMuonVeSom()+" "+globalVariables.getPhatNghiKhongPhep());
         PhieuLuong phieuLuong = phieuLuongService.layPhieuLuongUser(thang,nam,user);
+        if (phieuLuong == null) {
+            phieuLuong =phieuLuongService.layPhieuLuongTheoId(12+0L);
+            model.addAttribute("isExist","0");
+        }else{
+            model.addAttribute("isExist","1");
+        }
         NhanVien nv=nhanVienService.layNhanVienTheoId(user);
         List<ChamCong> chamCong = chamCongService.layChamCongTheoThangNam(user, thang, nam);
         List<PhuCap> danhSachPhuCap = phuCapRepository.findAllByMaPBAndMaCV(nv.maPB, nv.maCV);
@@ -71,11 +77,7 @@ public class PhieuLuongController {
         phieuLuong.setDanhSachKhauTru(danhSachKhauTru);
         phieuLuong.setLuongCoBan(luongCoBanRepository.findByMaPBAndMaCV(nv.maPB,nv.maCV).mucLuong);
         System.out.println(phieuLuong+"...");
-        if (phieuLuong == null) {
-            model.addAttribute("isExist","0");
-        }else{
-            model.addAttribute("isExist","1");
-        }
+
         System.out.println(phieuLuong.getId());
         model.addAttribute("thang",thang);
         model.addAttribute("nam",nam);

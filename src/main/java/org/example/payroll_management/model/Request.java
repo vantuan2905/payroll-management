@@ -32,4 +32,10 @@ public class Request {
 
     @Column(name = "ngayTao")
     private LocalDate ngayTao;
+
+    @Column(name = "liDo")
+    private String liDo;
+
+    @Transient
+    private String ten;
 }

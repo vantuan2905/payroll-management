@@ -224,7 +224,7 @@
                 <h2>Thống kê</h2>
                 <ul>
                     <li><span class="status normal">Nghỉ không phép</span> <span  th:text="${nghiKhongPhep}"></span></li>
-                    <li><span class="status early-late">Xin về sớm/Đi muộn</span> <span  th:text="${diSomVeMuon}"></span></li>
+                    <li><span class="status early-late">Về sớm/Đi muộn</span> <span  th:text="${diSomVeMuon}"></span></li>
                     <li><span class="status leave">Nghỉ phép</span> <span  th:text="${nghiPhep}"></span></li>
                     <li><span class="status unpaid-leave">Nghỉ không lương</span> <span  th:text="${nghiKhongLuong}"></span></li>
                     <li><span class="status ot">Đăng ký OT</span> <span  th:text="${ot}"></span></li>
@@ -290,12 +290,6 @@
         <!-- Các phần nhập liệu -->
         <div class="form-group">
             <label>Hình thức OT <span class="required">*</span></label>
-            <select id="loaiOT">
-                <option value="">Chọn hình thức</option>
-                <option value="ngayThuong">ngày thường</option>
-                <option value="ngayNghi">ngày nghỉ</option>
-                <option value="nghiLe">ngày lễ</option>
-            </select>
         </div>
         <div class="form-group">
             <label>Ngày <span class="required">*</span></label>
@@ -320,8 +314,8 @@
         <div class="form-group">
             <label>Hình thức nghỉ <span class="required">*</span></label>
             <select id="loaiNghiPhep">
-                <option value="nghiPhepThuong">Nghỉ phép thường</option>
-                <option value="nghiPhepNam">Nghỉ phép năm</option>
+                <option value="Nghỉ phép thường">Nghỉ phép thường</option>
+                <option value="Nghỉ phép năm">Nghỉ phép năm</option>
             </select>
         </div>
         <div class="form-group">
@@ -401,17 +395,14 @@
         // When the "Save" button is clicked
         $('#saveOT').on('click', function(event) {
             event.preventDefault();  // Prevent the form from submitting normally
-            // Get values from the input fields
-            const loai = document.getElementById('loaiOT').value;
+
             const ngay = document.getElementById('ngayOT').value;
             const liDoOT = document.getElementById('liDoOT').value;
 
-            // Log the values
-            console.log('Hình thức OT:', loai);
             console.log('Ngày:', ngay);
             console.log('Lý do OT:', liDoOT);
 
-            const ghiChu = `${ngay}\n${loai}\n${liDoOT}`;
+            const ghiChu = `${ngay}\n${liDoOT}`;
             const data = {
                 manv:manv,
                 ghiChu: ghiChu
