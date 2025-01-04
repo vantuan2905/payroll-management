@@ -157,6 +157,9 @@ public class RequestUserController {
                         chamCong.setIsApprovedLeaveDay(true);
                     }
                 }
+                request.setTrangThai("Đã duyệt");
+                request.setNguoiDuyet(adminRepository.findById(user).get().getMaAdmin());
+                requestRepository.save(request);
             }
         }
         List<Request> requests=requestRepository.findAllByTrangThai("Chưa xử lí");
