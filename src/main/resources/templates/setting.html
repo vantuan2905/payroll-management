@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css" >
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+
+    <script>
+
+    </script>
+    <style>
+
+
+        /* Container chính */
+        .form-container {
+            background: #ffffff;
+            padding: 25px 35px;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+            margin-left: 250px;
+            transition: transform 0.3s ease;
+        }
+
+        /* .form-container:hover {
+          transform: scale(1.02);
+        } */
+
+        /* Tiêu đề */
+        h2 {
+            margin-bottom: 25px;
+            text-align: left;
+            color: #333;
+            font-size: 1.8em;
+        }
+
+        /* Nội dung biểu mẫu */
+        .form-content {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .form-left,
+        .form-right {
+            flex: 1;
+            width: 500px;
+        }
+
+        /* Mỗi mục trong biểu mẫu */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        input[type="time"],
+        input[type="date"],
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Hiệu ứng khi focus vào ô nhập */
+        input[type="time"]:focus,
+        input[type="date"]:focus,
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
+            outline: none;
+        }
+
+        /* Nút lưu */
+        .button {
+            margin-top: 20px;
+            margin-left: auto;
+            display: block;
+            width: 120px;
+            padding: 12px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+    </style>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<nav>
+    <div th:replace="fragments/menu_admin :: navbar"></div>
+</nav>
+<p></p>
+<div class="content" style="padding:0px">
+    <div class="form-container">
+        <h2>Setting</h2>
+        <div class="form-content">
+            <div class="form-left">
+                <form th:action="@{/settings/}" method="post">
+                    <div class="form-group">
+                        <label for="checkin-time">Giờ checkin chuẩn:</label>
+                        <input
+                                type="time"
+                                id="checkin-time"
+                                name="checkIn"
+                                min="08:00"
+                                max="20:00"
+                                step="60"
+                                th:value="${checkIn}"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout-time">Giờ checkout chuẩn:</label>
+                        <input
+                                type="time"
+                                id="checkout-time"
+                                name="checkOut"
+                                step="60"
+                                min="08:00"
+                                max="20:00"
+                                th:value="${checkOut}"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="max-ot">Số giờ OT tối đa/ngày:</label>
+                        <input
+                                type="number"
+                                id="max-ot"
+                                name="maxOvertime"
+                                min="0"
+                                placeholder="Nhập số giờ OT tối đa..."
+                                th:value="${maxOvertime}"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="tet-holiday-start">Thời gian nghỉ Tết Nguyên Đán(Âm lịch):</label
+                        >
+                        <input
+                                type="text"
+                                id="tet-holiday-start"
+                                name="tetStart"
+                                th:value="${tetStart}"
+                                placeholder="Từ ngày...tháng 12"
+                        />
+                        <label for="tet-holiday-end"></label>
+                        <input
+                                type="text"
+                                id="tet-holiday-end"
+                                name="tetEnd"
+                                th:value="${tetEnd}"
+                                placeholder="Tới ngày...tháng 1"
+                        />
+                    </div>
+
+            </div>
+            <div class="form-right">
+
+                    <div class="form-group">
+                        <label for="max-leave-days"
+                        >Thời gian nghỉ phép tối đa (ngày):</label
+                        >
+                        <input
+                                type="number"
+                                id="max-leave-days"
+                                name="maxNghiPhep"
+                                placeholder="Nhập số ngày nghỉ phép..."
+                                min="0"
+                                th:value="${maxNghiPhep}"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="late-fine">Số tiền phạt đi muộn/về sớm (VND):</label>
+                        <input
+                                type="number"
+                                id="late-fine"
+                                name="phatDiMuonVeSom"
+                                placeholder="Nhập số tiền..."
+                                min="0"
+                                th:value="${phatDiMuonVeSom}"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="absent-fine"
+                        >Số tiền phạt nghỉ không phép (VND):</label
+                        >
+                        <input
+                                type="number"
+                                placeholder="Nhập số tiền..."
+                                id="absent-fine"
+                                name="phatNghi"
+                                min="0"
+                                th:value="${phatNghi}"
+                        />
+                    </div>
+
+            </div>
+        </div>
+        <input class="button" type="submit" value="Lưu Cài Đặt">
+        </form>
+    </div>
+</div>
+<script>
+    flatpickr("#checkin-time", {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i", // 24-hour format
+        time_24hr: true    // Forces 24-hour format
+    });
+    flatpickr("#checkout-time", {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i", // 24-hour format
+        time_24hr: true    // Forces 24-hour format
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get the active item's value from the hidden input
+        const activeItem = document.querySelector('input[name="active"]').value;
+        console.log(activeItem)
+        // Find the corresponding nav-bar item and add the 'active' class
+        const activeNavItem = document.getElementById(activeItem);
+        if (activeNavItem) {
+            activeNavItem.classList.add("active");
+        }
+    });
+
+</script>
+</body>
+</html>

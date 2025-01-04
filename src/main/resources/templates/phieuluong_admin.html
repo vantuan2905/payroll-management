@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css" >
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .weekend {
+            background-color: rgba(131, 125, 125, 0.15); /* Bôi nền đen */
+
+        }
+        .scrollable-table {
+            max-height: 490px; /* Chiều cao cố định */
+            overflow-y: auto;  /* Cuộn theo chiều dọc */
+            border: 1px solid #ccc; /* Đường viền cho đẹp */
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd; /* Đường viền giữa các ô */
+        }
+
+        th {
+            background-color: #f4f4f4;
+            position: sticky;
+            top: 0; /* Cố định tiêu đề khi cuộn */
+            z-index: 1;
+        }
+        .text-red {
+            color: red;
+        }
+        .btn-link {
+            background: none;
+            color: blue;
+            border: none;
+            padding: 0;
+            font: inherit;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .btn-link:hover {
+            color: darkblue;
+            text-decoration: none;
+        }
+        .label{
+            display:block;
+            float:left;
+            width:200px;
+        }
+        .positioned-button {
+            position: absolute; /* Use absolute or fixed for specific positioning */
+            top: 100px;
+            left: 500px;
+        }
+        .popup {
+            position: fixed;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            border-radius: 8px;
+            width: 450px;
+            text-align: left;
+        }
+
+        .popup-content button {
+            margin: 5px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .popup-content button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Overlay */
+        body.popup-active {
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .form-group select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .form-group textarea {
+            resize: none;
+            height: 130px;
+        }
+
+        .form-group .required {
+            color: red;
+        }
+
+        /* Di chuyển nút hành động ra ngoài dưới góc phải */
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px; /* Thêm khoảng cách phía trên */
+        }
+
+        .button-group button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .button-group .cancel-btn {
+            background: #ccc;
+            color: #333;
+        }
+
+        .button-group .submit-btn {
+            background: #007bff;
+            color: #fff;
+        }
+
+    </style>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<nav>
+    <div th:replace="fragments/menu_admin :: navbar"></div>
+</nav>
+<div class="container">
+<!--    <p th:text="${phieuLuong[0].thongKe.thoiGianLamViec}"></p>-->
+    <!-- Main Content -->
+    <div class="main" style="width: 1600px;">
+        <div class="filter">
+            <form th:action="@{/phieuLuong/admin/loc}" action="get">
+                <select name="thang"  style="margin-left: 100px">
+                    <option value="1" th:selected="${thang == 1}">Tháng 1</option>
+                    <option value="2" th:selected="${thang == 2}">Tháng 2</option>
+                    <option value="3" th:selected="${thang == 3}">Tháng 3</option>
+                    <option value="4" th:selected="${thang == 4}">Tháng 4</option>
+                    <option value="5" th:selected="${thang == 5}">Tháng 5</option>
+                    <option value="6" th:selected="${thang == 6}">Tháng 6</option>
+                    <option value="7" th:selected="${thang == 7}">Tháng 7</option>
+                    <option value="8" th:selected="${thang == 8}">Tháng 8</option>
+                    <option value="9" th:selected="${thang == 9}">Tháng 9</option>
+                    <option value="10" th:selected="${thang == 10}">Tháng 10</option>
+                    <option value="11" th:selected="${thang == 11}">Tháng 11</option>
+                    <option value="12" th:selected="${thang == 12}">Tháng 12</option>
+                </select>
+                <select name="nam" style="margin-left: 10px">
+                    <option value="2025" th:selected="${nam == 2025}">2025</option>
+                    <option value="2024" th:selected="${nam == 2024}">2024</option>
+                    <option value="2023" th:selected="${nam == 2023}"> 2023</option>
+                </select>
+                <input type="submit" value="Lọc" style="background: dodgerblue;width:50px">
+            </form>
+        </div>
+        <form th:action="@{/phieuLuong/tinhLuong}" action="get">
+            <input type="hidden" name="thang" th:value="${thang}">
+            <input type="hidden" name="nam" th:value="${nam}">
+            <input type="submit" value="Cập nhật bảng lương"   id="updatePayroll" class="btn btn-primary positioned-button" style="top:60px;left:1310px;width:200px">
+        </form>
+
+        <h2 style="margin-left: 550px">BẢNG THANH TOÁN LƯƠNG</h2>
+        <input type="hidden" id="isExist"  name="isExist" th:value="${isExist}">
+        <div th:switch="${isExist}">
+            <!-- Case when isExist == 0 -->
+            <h6 th:case="0" style="text-align: center;margin-left: 200px; margin-top: 20px; padding: 15px; background-color: #ffe6e6; border: 1px solid #ffcccc; color: #cc0000; font-weight: bold; border-radius: 5px;">Chưa có dữ liệu</h6>
+
+        </div>
+        <table style="margin-left: 111px;margin-bottom: 20px" th:style="${isExist.equals('0')} ? 'display:none;' : 'margin-left: 100px'">
+            <thead>
+            <tr>
+                <th >MNV</th>
+                <th>Lương cơ bản</th>
+                <th>Công chuẩn</th>
+                <th>Công thực tế</th>
+                <th>Số ngày OT</th>
+                <th>Nghỉ hưởng lương</th>
+                <th>Tổng lương</th>
+                <th>Khâu từ BH</th>
+                <th>Đi muộn/về sớm</th>
+                <th>Nghỉ không phép</th>
+                <th>Tổng trừ</th>
+                <th>Thực lĩnh </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="phieuLuong : ${danhSachPhieuLuong}">
+                <td th:text="${isExist.equals('1') ? phieuLuong.manv : ''}"></td>
+                <td class="formattedNumber"  th:text="${isExist.equals('1') ? phieuLuong.luongCoBan : ''}"></td>
+                <td th:text="${isExist.equals('1') ? phieuLuong.thongKe.ngayCongChuan : ''}"></td>
+                <td th:text="${isExist.equals('1') ? phieuLuong.thongKe.ngayThucTe: ''}"></td>
+                <td th:text="${isExist.equals('1') ? phieuLuong.thongKe.ot : ''}"></td>
+                <td th:text="${isExist.equals('1') ? (phieuLuong.thongKe.nghiLe+phieuLuong.thongKe.nghiPhep) : ''}"></td>
+                <td class="formattedNumber"  th:text="${phieuLuong.tongLuong }" style="font-weight: bold"></td>
+                <td class="formattedNumber"  th:text="${ (phieuLuong.tongLuong * phieuLuong.danhSachKhauTru[0].mucKhauTru)}"></td>
+                <td th:text="${isExist.equals('1') ? phieuLuong.thongKe.diMuonVeSom : ''}"></td>
+                <td th:text="${isExist.equals('1') ? phieuLuong.thongKe.nghiKhongPhep : ''}"></td>
+                <td class="formattedNumber"  th:text="${phieuLuong.tongTru}" style="font-weight: bold"></td>
+                <td class="formattedNumber"  th:text="${phieuLuong.thucLinh}" style="font-weight: bold"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Get all elements with the class 'formattedThucLinh'
+    var thucLinhElements = document.querySelectorAll('.formattedNumber');
+    thucLinhElements.forEach(function(element) {
+        var thucLinhValue = element.innerText;
+        var formattedValue = Number(thucLinhValue).toLocaleString();
+        element.innerText = formattedValue;
+    });
+    //disable
+    // Get the isExist value from the hidden input
+    const isExistValue = document.getElementById('isExist').value;
+
+    // Get the button element
+    const updatePayrollButton = document.getElementById('updatePayroll');
+
+    // Disable the button if isExist equals "1"
+    if (isExistValue === "1") {
+        updatePayrollButton.disabled = true;
+        updatePayrollButton.classList.add('disabled'); // Optional: Add a class for styling
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get the active item's value from the hidden input
+        const activeItem = document.querySelector('input[name="active"]').value;
+        console.log(activeItem)
+        // Find the corresponding nav-bar item and add the 'active' class
+        const activeNavItem = document.getElementById(activeItem);
+        if (activeNavItem) {
+            activeNavItem.classList.add("active");
+        }
+    });
+
+</script>
+</body>
+</html>

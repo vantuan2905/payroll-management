@@ -55,30 +55,45 @@
         <div class="payroll-table-container">
 
             <div class="filter">
-                <input type="text" placeholder="Lọc theo ...">
-                <select>
-                    <option>Tháng 11</option>
-                    <option>Tháng 10</option>
-                    <option>Tháng 9</option>
-                </select>
-                <select>
-                    <option>2024</option>
-                    <option>2023</option>
-                    <option>2022</option>
-                </select>
+
+                <form th:action="@{/phieuLuong/loc}" action="get">
+                    <select name="thang"  style="margin-left: 100px">
+                        <option value="1" th:selected="${thang == 1}">Tháng 1</option>
+                        <option value="2" th:selected="${thang == 2}">Tháng 2</option>
+                        <option value="3" th:selected="${thang == 3}">Tháng 3</option>
+                        <option value="4" th:selected="${thang == 4}">Tháng 4</option>
+                        <option value="5" th:selected="${thang == 5}">Tháng 5</option>
+                        <option value="6" th:selected="${thang == 6}">Tháng 6</option>
+                        <option value="7" th:selected="${thang == 7}">Tháng 7</option>
+                        <option value="8" th:selected="${thang == 8}">Tháng 8</option>
+                        <option value="9" th:selected="${thang == 9}">Tháng 9</option>
+                        <option value="10" th:selected="${thang == 10}">Tháng 10</option>
+                        <option value="11" th:selected="${thang == 11}">Tháng 11</option>
+                        <option value="12" th:selected="${thang == 12}">Tháng 12</option>
+                    </select>
+                    <select name="nam" style="margin-left: 10px">
+                        <option value="2025" th:selected="${nam == 2025}">2025</option>
+                        <option value="2024" th:selected="${nam == 2024}">2024</option>
+                        <option value="2023" th:selected="${nam == 2023}"> 2023</option>
+                    </select>
+                    <input type="submit" value="Lọc" style="background: dodgerblue;width:50px">
+                </form>
             </div>
-            <h2 style="margin-left: 400px">PHIẾU THANH TOÁN LƯƠNG</h2>
-            <table class="payroll-header-table" style="float:left;width:70%;margin-left: 200px">
+            <h2 style="margin-left: 550px">PHIẾU THANH TOÁN LƯƠNG</h2>
+            <input type="hidden" name="isExist" th:value="${isExist}">
+            <div th:switch="${isExist}">
+                <!-- Case when isExist == 0 -->
+                <h6 th:case="0" style="text-align: center;margin-left: 200px; margin-top: 20px; padding: 15px; background-color: #ffe6e6; border: 1px solid #ffcccc; color: #cc0000; font-weight: bold; border-radius: 5px;">Chưa có dữ liệu</h6>
+
+            </div>
+            <table class="payroll-header-table" style="" th:style="${isExist.equals('0')} ? 'display:none;' : 'float:left;width:70%;margin-left: 200px'">
                 <tr>
                     <td><h6>Họ và tên:</h6></td>
-                    <td colspan="2">Nguyễn Văn X</td>
+                    <td colspan="2" th:text="${ten}">Nguyễn Văn X</td>
                 </tr>
-                <tr>
-                    <td><h6>Chức vụ:</h6></td>
-                    <td colspan="2">Dev</td>
-                </tr>
+
             </table>
-            <table style="float:left;width:70%;margin-left: 200px;margin-bottom: 20px">
+            <table style="float:left;width:70%;margin-left: 200px;margin-bottom: 20px" th:style="${isExist.equals('0')} ? 'display:none;' : 'float:left;width:70%;margin-left: 200px'">
                 <thead>
                 <tr>
                     <th>TTT</th>
@@ -87,19 +102,32 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr><td>1</td><td>Lương Cơ bản</td><td>10,000,000</td></tr>
-                <tr><td>2</td><td>Ngày công chuẩn</td><td>176</td></tr>
-                <tr><td>3</td><td>Ngày công thực tế</td><td>180</td></tr>
-                <tr><td>4</td><td>Số giờ OT</td><td>4</td></tr>
-                <tr><td>5</td><td>Số giờ nghỉ hưởng 100% lương</td><td>8</td></tr>
-                <tr><td>6</td><td>Phụ cấp</td><td>1,500,000</td></tr>
-                <tr class="highlight"><td>7</td><td><b>Tổng lương, phụ cấp</b></td><td><b>12,000,000</b></td></tr>
-                <tr><td>8</td><td>Thuế thu nhập cá nhân</td><td>500,000</td></tr>
-                <tr><td>9</td><td>BHXH</td><td>800,000</td></tr>
-                <tr><td>10</td><td>Số lần đi muộn/về sớm</td><td>2</td></tr>
-                <tr><td>11</td><td>Nghỉ không phép</td><td>1</td></tr>
-                <tr class="highlight"><td>12</td><td><b>Tổng trừ</b></td><td><b>1,450,000</b></td></tr>
-                <tr class="highlight"><td>13</td><td><b>THU NHẬP THỰC LĨNH</b></td><td><b>10,550,000</b></td></tr>
+                <tr><td>1</td><td>Lương Cơ bản</td><td class="formattedNumber" th:text="${isExist.equals('1') ? phieuLuong.luongCoBan : ''}">10,000,000</td></tr>
+                <tr><td>2</td><td>Ngày công chuẩn</td><td th:text="${isExist.equals('1') ? phieuLuong.thongKe.ngayCongChuan : ''}">176</td></tr>
+                <tr><td>3</td><td>Ngày công thực tế</td><td th:text="${isExist.equals('1') ? phieuLuong.thongKe.ngayThucTe: ''}">180</td></tr>
+                <tr><td>4</td><td>Số giờ OT ngay thường</td><td th:text="${isExist.equals('1') ? phieuLuong.thongKe.otNgayNghi : ''}">4</td></tr>
+                <tr><td>5</td><td>Số giờ OT ngày nghỉ</td><td th:text="${isExist.equals('1') ? phieuLuong.thongKe.otNgayLe : ''}">4</td></tr>
+                <tr><td>6</td><td>Số giờ OT ngày lễ</td><td th:text="${isExist.equals('1') ? phieuLuong.thongKe.otNgayThuong : ''}">4</td></tr>
+                <tr><td>7</td><td>Số ngày nghỉ hưởng 100% lương</td><td th:text="${isExist.equals('1') ? (phieuLuong.thongKe.nghiLe+phieuLuong.thongKe.nghiPhep) : ''}"></td></tr>
+                <tr><td>8</td><td>Phụ cấp</td>
+                    <td>
+                        <table>
+
+                            <tbody>
+                            <tr th:each="phuCap, stat : ${phieuLuong.danhSachPhuCap}">
+                                <td th:text="${phuCap.tenKhoan}"></td> <!-- Tên phụ cấp -->
+                                <td class="formattedNumber" th:text="${phuCap.mucPhuCap}"></td> <!-- Mức phụ cấp -->
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr class="highlight"><td>9</td><td><b>Tổng lương, phụ cấp</b></td><td class="formattedNumber" th:text="${phieuLuong.tongLuong }" style="font-weight: bold"></td></tr>
+                <tr><td>10</td><td>BHXH</td><td class="formattedNumber" th:text="${ (phieuLuong.tongLuong * phieuLuong.danhSachKhauTru[0].mucKhauTru)}">800,000</td></tr>
+                <tr><td>11</td><td>Số lần đi muộn/về sớm</td><td th:text="${isExist.equals('1') ? phieuLuong.thongKe.diMuonVeSom : ''}">2</td></tr>
+                <tr><td>12</td><td>Nghỉ không phép</td><td th:text="${isExist.equals('1') ? phieuLuong.thongKe.nghiKhongPhep : ''}">1</td></tr>
+                <tr class="highlight"><td>13</td><td><b>Tổng trừ</b></td><td class="formattedNumber" th:text="${phieuLuong.tongTru}" style="font-weight: bold"></td></tr>
+                <tr class="highlight"><td>14</td><td ><b>THU NHẬP THỰC LĨNH</b></td><td class="formattedNumber" th:text="${phieuLuong.thucLinh}" style="font-weight: bold"></td></tr>
                 </tbody>
             </table>
         </div>
@@ -107,6 +135,20 @@
 </div>
 
 <script>
+    // Get all elements with the class 'formattedThucLinh'
+    var thucLinhElements = document.querySelectorAll('.formattedNumber');
+
+    // Convert each value in the array and format it
+    thucLinhElements.forEach(function(element) {
+        var thucLinhValue = element.innerText;
+
+        // Format the number using toLocaleString() for thousands separator
+        var formattedValue = Number(thucLinhValue).toLocaleString();
+
+        // Set the formatted value back to the element
+        element.innerText = formattedValue;
+    });
+
     document.addEventListener("DOMContentLoaded", function () {
         // Get the active item's value from the hidden input
         const activeItem = document.querySelector('input[name="active"]').value;

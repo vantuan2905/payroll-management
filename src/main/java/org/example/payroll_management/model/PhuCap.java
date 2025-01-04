@@ -22,5 +22,5 @@ public class PhuCap {
     public String tenKhoan;
 
     @Column(name = "MucPhuCap")
-    public String mucPhuCap;
+    public Integer mucPhuCap;
 }

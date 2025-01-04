@@ -22,5 +22,5 @@ public class KhauTru {
     public String tenKhoan;
 
     @Column(name = "MucKhauTru")
-    public String mucKhauTru;
+    public Double mucKhauTru;
 }

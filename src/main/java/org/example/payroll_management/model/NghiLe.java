@@ -8,6 +8,10 @@ import lombok.Data;
 @Data
 public class NghiLe {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
     @Column(name = "_date")
     private String _date;
 

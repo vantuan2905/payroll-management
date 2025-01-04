@@ -31,4 +31,11 @@ public class UserController {
         model.addAttribute("active","trangChu");
         return "index_user";
     }
+
+    @GetMapping("/admin")
+    public String index_admin(@CookieValue(value = "ma") String user, Model model) {
+
+        model.addAttribute("active","trangChu");
+        return "index_admin";
+    }
 }

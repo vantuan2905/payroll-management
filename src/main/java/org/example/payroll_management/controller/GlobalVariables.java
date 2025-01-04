@@ -13,4 +13,15 @@ public class GlobalVariables {
     @Value("${global.checkOut}")
     private String checkOut;
 
+    @Value("${global.maxOvertime}")
+    private Integer maxOvertime;
+
+    @Value("${global.maxNghiPhep}")
+    private Integer maxNghiPhep;
+
+    @Value("${global.phatDiMuonVeSom}")
+    private Integer phatDiMuonVeSom;
+
+    @Value("${global.phatNghiKhongPhep}")
+    private Integer phatNghiKhongPhep;
 }

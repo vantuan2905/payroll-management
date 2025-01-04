@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css" >
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<nav>
+    <div th:replace="fragments/menu_admin :: navbar"></div>
+</nav>
+<p>chấm công</p>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get the active item's value from the hidden input
+        const activeItem = document.querySelector('input[name="active"]').value;
+        console.log(activeItem)
+        // Find the corresponding nav-bar item and add the 'active' class
+        const activeNavItem = document.getElementById(activeItem);
+        if (activeNavItem) {
+            activeNavItem.classList.add("active");
+        }
+    });
+
+</script>
+</body>
+</html>

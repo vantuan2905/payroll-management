@@ -42,8 +42,12 @@ public class AuthController {
                 Cookie user = new Cookie("ma", admin.getMaAdmin());
                 response.addCookie(role);
                 response.addCookie(user);
-
-                return "index";
+                user.setPath("/");
+                user.setMaxAge(7 * 24 * 60 * 60);
+                response.addCookie(role);
+                response.addCookie(user);
+                model.addAttribute("active","trangChu");
+                return "index_admin";
             }
         }
         //check Nhan vien

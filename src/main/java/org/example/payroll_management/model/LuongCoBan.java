@@ -19,5 +19,5 @@ public class LuongCoBan {
     public String maCV;
 
     @Column(name = "MucLuong")
-    public Double mucLuong;
+    public Long mucLuong;
 }

@@ -18,9 +18,24 @@ public class PhieuLuong {
     @Column(name = "Thang")
     private int thang;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false) // Enforces relationship
-    @JoinColumn(name = "MaNV", nullable = false)
-    private NhanVien nhanVien;
+    @Column(name = "Nam")
+    private int nam;
+
+    @Column(name = "manv")
+    private String manv;
+
+    @Column(name = "tongLuong")
+    private Long tongLuong;
+
+    @Column(name = "tongTru")
+    private Long tongTru;
+
+    @Column(name = "thucLinh")
+    private Long thucLinh;
+
+
+    @Transient
+    private ThongKe thongKe;
 
     @Transient
     private List<KhauTru> danhSachKhauTru;
@@ -29,6 +44,6 @@ public class PhieuLuong {
     private List<PhuCap> danhSachPhuCap;
 
     @Transient
-    private Double luongCoBan;
+    private Long luongCoBan;
 
 }

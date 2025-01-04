@@ -24,4 +24,11 @@ public class RequestUserController {
         model.addAttribute("active", "yeuCau");
         return "request_user";
     }
+
+    @GetMapping("/admin")
+    public String getRequestUser(Model model){
+
+        model.addAttribute("active", "yeuCau");
+        return "request_admin";
+    }
 }

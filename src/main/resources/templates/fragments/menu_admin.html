@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Navbar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+    </style>
+</head>
+<body>
+
+<nav class="navbar" th:fragment="navbar">
+    <input type="hidden" name="active" th:value="${active}">
+    <div class="navbar-item" id="trangChu">
+        <div class="circle-icon"></div>
+        <span><a th:href="@{/user/admin}">Trang chủ</a></span>
+    </div>
+    <div class="navbar-item" id="chamCong">
+        <div class="circle-icon"></div>
+        <span><a th:href="@{/chamCong/admin}">Chấm công</a></span>
+    </div>
+    <div class="navbar-item" id="phieuLuong">
+        <div class="circle-icon"></div>
+        <span><a th:href="@{/phieuLuong/admin}">Phiếu lương</a></span>
+    </div>
+    <div class="navbar-item" id="yeuCau">
+        <div class="circle-icon"></div>
+        <span><a th:href="@{/requests/admin}">Yêu cầu</a></span>
+    </div>
+    <div class="navbar-item" id="setting">
+        <div class="circle-icon"></div>
+        <span><a th:href="@{/settings/}">Setting</a></span>
+    </div>
+</nav>
+al
+
+</body>
+</html>
