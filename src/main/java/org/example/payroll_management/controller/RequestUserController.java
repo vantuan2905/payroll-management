@@ -111,6 +111,7 @@ public class RequestUserController {
                 request.setTrangThai("Đã duyệt");
                 request.setNguoiDuyet(adminRepository.findById(user).get().getMaAdmin());
                 requestRepository.save(request);
+
             }else{
                 String[] data = request.getGhiChu().split("\n");
                 String loaiNghiPhep = data[0];
@@ -151,14 +152,17 @@ public class RequestUserController {
                         for(ChamCong chamCong : chamCongs){
                             chamCong.setIsPaidLeaveDay(true);
                         }
+                        request.setTrangThai("Đã duyệt");
+                        request.setNguoiDuyet(adminRepository.findById(user).get().getMaAdmin());
                     }
                 }else{
                     for(ChamCong chamCong : chamCongs){
                         chamCong.setIsApprovedLeaveDay(true);
                     }
+                    request.setTrangThai("Đã duyệt");
+                    request.setNguoiDuyet(adminRepository.findById(user).get().getMaAdmin());
                 }
-                request.setTrangThai("Đã duyệt");
-                request.setNguoiDuyet(adminRepository.findById(user).get().getMaAdmin());
+
                 requestRepository.save(request);
             }
         }
@@ -275,6 +279,9 @@ public class RequestUserController {
         }
         System.out.println(workHour+"    "+overTimeHour);
         System.out.println(chamCong.getId());
+        // Round workHour to 1 decimal place
+        workHour = Math.round(workHour * 10.0) / 10.0;
+        overTimeHour = Math.round(overTimeHour * 10.0) / 10.0f;
         chamCong.setWorkingHours(workHour);
         chamCong.setOverTimeHour(overTimeHour);
         chamCongService.luuChamCong(chamCong);

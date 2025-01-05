@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css" >
+    <style>
+
+        .table-container {
+            width: 90%;
+            margin: 20px auto;
+            overflow-x: auto;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        thead {
+            background-color: #bdbdbd;
+        }
+
+        th,
+        td {
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            text-align: center; /* Căn giữa mặc định */
+        }
+
+        th {
+            font-weight: bold;
+            color: #000; /* Màu chữ đen để dễ đọc trên nền xám */
+        }
+
+        td {
+            vertical-align: middle; /* Căn giữa theo chiều dọc */
+        }
+
+        td:nth-child(5) {
+            text-align: left; /* Cột "Ghi chú" căn trái */
+        }
+
+        td button {
+
+        }
+
+        .accept {
+            width:100px;
+            float:left;
+            margin: 4px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            background-color: #5998c5;
+            color: white;
+        }
+
+        .decline {
+            margin: 4px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            background-color: #e03616;
+            color: white;
+        }
+
+        .accept:hover {
+            background-color: #4d87b0; /* Màu đậm hơn khi hover */
+        }
+
+        .decline:hover {
+            background-color: #c12f13; /* Màu đậm hơn khi hover */
+        }
+
+        @media (max-width: 768px) {
+            th,
+            td {
+                font-size: 14px;
+                padding: 8px 10px;
+            }
+
+            td button {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+        }
+        /* Styling the form */
+        .resolve-form {
+            margin: 0; /* Removes default margin */
+            padding: 0; /* Removes default padding */
+        }
+
+        /* Styling the button */
+        .resolve-button {
+            background-color: #28a745; /* Green background */
+            color: white; /* White text */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners */
+            padding: 10px 15px; /* Padding inside the button */
+            font-size: 14px; /* Font size */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+        }
+
+        /* Hover effect for the button */
+        .resolve-button:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+
+    </style>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<nav>
+    <div th:replace="fragments/menu_admin :: navbar"></div>
+</nav>
+<p></p>
+<div class="content" style="padding:30px">
+
+    <div class="table-container scrollable-table">
+        <table >
+            <thead>
+            <tr>
+                <th>Tên nhân viên</th>
+                <th>Ngày tạo</th>
+                <th>Nội dung</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="notification : ${notifications}">
+                <td th:text="${notification.tenNV}"></td>
+                <td th:text="${notification.ngayTao}"></td>
+                <td th:text="${notification.noiDung}" style="width:400px;text-align: left"></td>
+                <td th:text="${notification.trangThai}"></td>
+                <td th:switch="${notification.trangThai}" style="width:200px">
+                    <form th:action="@{/notification/giaiQuyet}" th:case="'Chưa giải quyết'" class="resolve-form">
+                        <input type="hidden" name="notificationId" th:value="${notification.id}" />
+                        <input type="submit" class="resolve-button" value="Đánh dấu là đã giải quyết">
+                    </form>
+                    <span th:case="*"></span> <!-- Default case (if needed) -->
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get the active item's value from the hidden input
+        const activeItem = document.querySelector('input[name="active"]').value;
+        console.log(activeItem)
+        // Find the corresponding nav-bar item and add the 'active' class
+        const activeNavItem = document.getElementById(activeItem);
+        if (activeNavItem) {
+            activeNavItem.classList.add("active");
+        }
+    });
+
+</script>
+</body>
+</html>

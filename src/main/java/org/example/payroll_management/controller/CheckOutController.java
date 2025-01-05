@@ -144,6 +144,9 @@ public class CheckOutController {
         }
         System.out.println(workHour+"    "+overTimeHour);
         System.out.println(chamCong.getId());
+        // Round workHour to 1 decimal place
+        workHour = Math.round(workHour * 10.0) / 10.0;
+        overTimeHour = Math.round(overTimeHour * 10.0) / 10.0f;
         chamCong.setWorkingHours(workHour);
         chamCong.setOverTimeHour(overTimeHour);
         chamCongService.luuChamCong(chamCong);
