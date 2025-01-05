@@ -151,13 +151,16 @@ public class RequestUserController {
                     }else{
                         for(ChamCong chamCong : chamCongs){
                             chamCong.setIsPaidLeaveDay(true);
+                            chamCongService.luuChamCong(chamCong);
                         }
+
                         request.setTrangThai("Đã duyệt");
                         request.setNguoiDuyet(adminRepository.findById(user).get().getMaAdmin());
                     }
                 }else{
                     for(ChamCong chamCong : chamCongs){
                         chamCong.setIsApprovedLeaveDay(true);
+                        chamCongService.luuChamCong(chamCong);
                     }
                     request.setTrangThai("Đã duyệt");
                     request.setNguoiDuyet(adminRepository.findById(user).get().getMaAdmin());

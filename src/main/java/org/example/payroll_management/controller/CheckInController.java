@@ -70,7 +70,7 @@ public class CheckInController {
         // Fetch records for today, sorted by time
         List<ChiTietChamCong> records = chiTietChamCongRepository.layChiTietChamCong(manv);
         List<Duration> durations = new ArrayList<>();
-        LocalTime startTime = LocalTime.of(8, 0);
+        LocalTime startTime = LocalTime.of(8, 30);
         LocalTime cutoffTime = LocalTime.of(17, 30);
         LocalTime lunchStart = LocalTime.of(12, 0);
         LocalTime lunchEnd = LocalTime.of(13, 0);
@@ -155,8 +155,8 @@ public class CheckInController {
         System.out.println(workHour+"    "+overTimeHour);
         System.out.println(chamCong.getId());
         // Round workHour to 1 decimal place
-        workHour = Math.round(workHour * 10.0) / 10.0;
-        overTimeHour = Math.round(overTimeHour * 10.0) / 10.0f;
+        workHour = Math.round(workHour * 100.0) / 100.0;
+        overTimeHour = Math.round(overTimeHour * 100.0) / 100.0f;
         chamCong.setWorkingHours(workHour);
         chamCong.setOverTimeHour(overTimeHour);
         chamCongService.luuChamCong(chamCong);

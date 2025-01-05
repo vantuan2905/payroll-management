@@ -194,6 +194,7 @@ public class PhieuLuongController {
         System.out.println(danhSachPhieuLuong.size()+"  ++++******-----");
         return "phieuluong_admin";
     }
+
     @GetMapping("/tinhLuong")
     public String tinhLuong(Model model,@RequestParam Integer thang,@RequestParam Integer nam) {
         List<NhanVien> danhSachNhanVien = nhanVienService.layDanhSachNhanVien();
@@ -223,14 +224,14 @@ public class PhieuLuongController {
 
                 double ngayThucTe = Math.round((thongKe.thoiGianLamViec / 8) * 10.0) / 10.0;
                 thongKe.ngayThucTe = ngayThucTe;
-                long tongLuong = (long) Math.ceil((luongCoBan + tongPhuCap) * ((ngayThucTe + thongKe.nghiLe + thongKe.nghiPhep) / thongKe.ngayCongChuan));
+                long tongLuong = (long) Math.ceil((luongCoBan) * ((ngayThucTe + thongKe.nghiLe + thongKe.nghiPhep) / thongKe.ngayCongChuan) +tongPhuCap);
                 List<OverTime> overtimes=overTimeRepository.findAll();
                 Map<String, Double> overTimeMap = new HashMap<>();
                 for (OverTime overTime : overtimes) {
                     overTimeMap.put(overTime.loai,overTime.getHeSo());
-                    System.out.println(overTime.getLoai()+" "+overTime.getHeSo() );
+                    System.out.println(overTime.getLoai()+" "+overTime.getHeSo());
                 }
-                long luongTheoGio =(long) (luongCoBan + tongPhuCap) / (thongKe.ngayCongChuan*8);
+                long luongTheoGio =(long) (luongCoBan) / (thongKe.ngayCongChuan*8);
                 System.out.println(luongTheoGio+" *------");
                 tongLuong+=luongTheoGio*(thongKe.otNgayThuong*overTimeMap.get("thuong")+thongKe.otNgayNghi*overTimeMap.get("nghi")+ thongKe.nghiLe*overTimeMap.get("le"));
                 long tongTru = 0;
